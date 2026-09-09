@@ -4,9 +4,9 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Biblioteca biblioteca = Biblioteca.createBiblioteca();
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in, "UTF-8");
         menu(scanner, biblioteca);
-        menuEmprestimo(scanner);
+
         scanner.close();
     }
 
@@ -22,14 +22,22 @@ public class Main {
         while (continuar) {
             try {
                 String response = input(scanner);
+                if (response.toUpperCase() == "NÃO") {
+                    response = "NAO";
+                }
                 switch (response.toUpperCase()) {
                     case "SIM":
                         listarLivros(biblioteca);
+                        menuEmprestimo(scanner, biblioteca);
                         continuar = !continuar;
                         break;
-                    case "NAO", "NÃO":
+                    case "NAO":
                         continuar = !continuar;
-                        System.out.print("Obrigado por acessar a biblioteca Alves!");
+                        System.out.println("Obrigado por acessar a biblioteca Alves!");
+                        break;
+                    case "NÃO":
+                        continuar = !continuar;
+                        System.out.println("Obrigado por acessar a biblioteca Alves!");
                         break;
                     default:
                         System.out.println("Opção inválida, tente novemente.");
@@ -44,20 +52,22 @@ public class Main {
 
     }
 
-    public static void menuEmprestimo(Scanner scanner) {
+    public static void menuEmprestimo(Scanner scanner, Biblioteca biblioteca) {
         boolean continuar = true;
         while (continuar) {
             System.out.println("Você deseja fazer o emprestimo de algum livro?");
             String response = scanner.next();
             switch (response.toUpperCase()) {
                 case "SIM":
-
+                    emprestimo(biblioteca, scanner);
+                    continuar = !continuar;
                     break;
                 case "NAO", "NÃO":
-
+                    continuar = !continuar;
+                    System.out.println("Obrigado por acessar a biblioteca Alves!");
                     break;
                 default:
-                    System.out.println();
+                    System.out.println("Opção inválida, tente novemente.");
                     break;
             }
 
@@ -70,8 +80,28 @@ public class Main {
             if (!livro.isDisponivel()) {
                 continue;
             }
-            System.err.printf("Livro: %s - Autor: %s - id: %s%n", livro.getTitulo(), livro.getAutor().getNome(),livro.getId());
+            System.out.printf("Livro: %s - Autor: %s - id: %s%n", livro.getTitulo(), livro.getAutor().getNome(),livro.getId());
+        }
+    }
+
+        public static void emprestimo(Biblioteca biblioteca, Scanner scanner){
+            boolean continuar = true;
+            while (continuar) {
+                try {
+                    System.out.println("Insira o id do livro que você gostaria de fazer o emprestimo");
+                    String id = scanner.next();
+                    Livro livro = biblioteca.geLivrobyId(id);
+                    
+                    System.out.printf("Para pegar o Livro %s emprestado digite o seu nome:%n",livro.getTitulo());
+                    String nome = input(scanner);
+                    livro.emprestarLivro();
+
+                    System.out.printf("Emprestimo feito com sucesso %s, devolva dentro de 2 semanas.%n",nome);
+                    continuar = !continuar;
+                } catch (NullPointerException e) {
+                    System.out.println("Parece que não temos esse livro, tente novamente.");
+                }
+            }
         }
 
-    }
 }

@@ -41,6 +41,15 @@ public class Biblioteca {
                 this.emprestimos = emprestimos;
         }
 
+        public Livro geLivrobyId(String id)throws NullPointerException{
+                for (Livro livro : getLivros()) {
+                        if (livro.getId().equals(id)){
+                                return livro;
+                        }
+                }
+                return null;
+        }
+
         public static Biblioteca createBiblioteca() {
                 Autor autor1 = new Autor(1, "Machado de Assis", LocalDate.of(1839, 6, 21));
                 Autor autor2 = new Autor(2, "Clarice Lispector", LocalDate.of(1920, 12, 10));

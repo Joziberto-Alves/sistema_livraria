@@ -42,7 +42,7 @@ public class Livro {
         return id;
     }
 
-    public void emprestarLivro(String id) {
+    public void emprestarLivro() {
         setDisponivel(!disponivel);
     }
 
@@ -50,4 +50,5 @@ public class Livro {
         setDisponivel(!disponivel);
         setDataAtualizacao(LocalDate.now());
     }
+
 }
